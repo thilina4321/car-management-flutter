@@ -1,10 +1,55 @@
+import 'dart:developer';
+
+import 'package:dio/dio.dart';
+import 'package:ds_rent_cars/util/user.dart';
 import 'package:flutter/material.dart';
 
 import './/components/constants.dart';
 import 'text_form_bar.dart';
 import './/screens/MainScreen/main_screen.dart';
 
-class Body extends StatelessWidget {
+class Body extends StatefulWidget {
+  @override
+  State<Body> createState() => _BodyState();
+}
+
+class _BodyState extends State<Body> {
+  late String userName = '';
+  late String email = '';
+  late String password = '';
+  late String mobileNumber = '';
+  late String userId = '';
+
+  final url = 'https://car-management-app-university.herokuapp.com';
+  Dio dio = new Dio();
+
+  Future<void> fetchRecommend(email, password, userName, mobileNumber) async {
+    var data = {
+      "email": email.toString(),
+      "password": password,
+      "firstName": userName,
+      "mobileNumber": mobileNumber
+    };
+    try {
+      var signUp = await dio.post('$url/users/signup', data: data);
+      var user = signUp.data["user"];
+      
+      setState(() {
+        userId = user["_id"];
+        UserDataForShare().setId(userId);
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(
+            builder: (context) => MainScreen(userId: userId,),
+          ),
+          (route) => false,
+        );
+      });
+    } catch (e) {
+      throw e;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -104,6 +149,8 @@ class Body extends StatelessWidget {
               horizontal: size.width * 0.12,
             ),
             child: TxtForm(
+              setValue: (val) => {userName = val},
+              value: userName,
               labelTxt: "User Name",
               hintTxt: "Enter your user name",
               suffixIcon: Icon(
@@ -118,6 +165,8 @@ class Body extends StatelessWidget {
               horizontal: size.width * 0.12,
             ),
             child: TxtForm(
+              setValue: (val) => {email = val},
+              value: email,
               labelTxt: "Email Address",
               hintTxt: "example@gmail.com",
               suffixIcon: Icon(
@@ -132,6 +181,8 @@ class Body extends StatelessWidget {
               horizontal: size.width * 0.12,
             ),
             child: TxtForm(
+              setValue: (val) => {mobileNumber = val},
+              value: mobileNumber,
               labelTxt: "Mobile Number",
               hintTxt: "7XXXXXXXX",
               suffixIcon: Icon(
@@ -146,6 +197,8 @@ class Body extends StatelessWidget {
               horizontal: size.width * 0.12,
             ),
             child: TxtForm(
+              setValue: (val) => {password = val},
+              value: password,
               labelTxt: "Password",
               hintTxt: "Enter your password",
               suffixIcon: Icon(
@@ -164,13 +217,7 @@ class Body extends StatelessWidget {
               style: TextStyle(fontSize: 20),
             ),
             onPressed: () {
-              Navigator.pushAndRemoveUntil(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => MainScreen(),
-                ),
-                (route) => false,
-              );
+              fetchRecommend(email, password, userName, mobileNumber);
             },
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(100),

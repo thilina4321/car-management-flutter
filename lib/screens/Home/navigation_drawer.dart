@@ -1,3 +1,5 @@
+// ignore_for_file: unnecessary_const
+
 import 'package:flutter/material.dart';
 
 import './/components/constants.dart';
@@ -15,59 +17,59 @@ class NavDrawer extends StatelessWidget {
           children: [
             ProfileTile(size: size),
             //Divider(color: Colors.white),
-            Padding(
+            const Padding(
               padding: EdgeInsets.only(left: kDefaultPadding / 2),
               child: MenuItems(
                 title: "Favourites",
                 iconName: Icon(Icons.favorite_border_rounded),
               ),
             ),
-            SizedBox(height: 10),
-            Padding(
+            const SizedBox(height: 10),
+            const Padding(
               padding: EdgeInsets.only(left: kDefaultPadding / 2),
               child: MenuItems(
                 title: "Booked Vehicles",
                 iconName: Icon(Icons.shopping_cart_rounded),
               ),
             ),
-            SizedBox(height: 10),
-            Padding(
-              padding: EdgeInsets.only(left: kDefaultPadding / 2),
+            const SizedBox(height: 10),
+            const Padding(
+              padding: const EdgeInsets.only(left: kDefaultPadding / 2),
               child: MenuItems(
                 title: "notifications",
                 iconName: Icon(Icons.notifications_active_rounded),
               ),
             ),
-            SizedBox(height: 10),
-            Padding(
-              padding: EdgeInsets.only(left: kDefaultPadding / 2),
-              child: MenuItems(
+            const SizedBox(height: 10),
+            const Padding(
+              padding: const EdgeInsets.only(left: kDefaultPadding / 2),
+              child: const MenuItems(
                 title: "chat",
-                iconName: Icon(Icons.chat_bubble_rounded),
+                iconName: const Icon(Icons.chat_bubble_rounded),
               ),
             ),
-            SizedBox(height: 20),
-            Divider(
+            const SizedBox(height: 20),
+            const Divider(
               color: Colors.white,
             ),
-            SizedBox(height: 20),
-            Padding(
-              padding: EdgeInsets.only(left: kDefaultPadding / 2),
-              child: MenuItems(
+            const SizedBox(height: 20),
+            const Padding(
+              padding: const EdgeInsets.only(left: kDefaultPadding / 2),
+              child: const MenuItems(
                 title: "Settings",
-                iconName: Icon(Icons.settings),
+                iconName: const Icon(Icons.settings),
               ),
             ),
-            SizedBox(height: 10),
-            Padding(
-              padding: EdgeInsets.only(left: kDefaultPadding / 2),
-              child: MenuItems(
+            const SizedBox(height: 10),
+            const Padding(
+              padding: const EdgeInsets.only(left: kDefaultPadding / 2),
+              child: const MenuItems(
                 title: "Updates",
                 iconName: Icon(Icons.update_rounded),
               ),
             ),
-            SizedBox(height: 10),
-            Padding(
+            const SizedBox(height: 10),
+            const Padding(
               padding: EdgeInsets.only(left: kDefaultPadding / 2),
               child: MenuItems(
                 title: "Log Out",
@@ -111,7 +113,7 @@ class ProfileTile extends StatelessWidget {
             SizedBox(
               height: size.height * 0.12,
               width: size.width * 0.25,
-              child: CircleAvatar(
+              child: const CircleAvatar(
                 radius: 30,
                 backgroundColor: Colors.white,
                 child: CircleAvatar(
@@ -139,16 +141,16 @@ class ProfileTile extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
+                  const Text(
                     "Kanisha Liyanage",
                     style: TextStyle(
-                      fontSize: 22,
+                      fontSize: 20,
                       fontWeight: FontWeight.bold,
                       color: Colors.white,
                     ),
                   ),
                   SizedBox(height: size.height * 0.01),
-                  Text(
+                  const Text(
                     "@KanishaLiyanage",
                     style: TextStyle(
                       fontSize: 15,
@@ -185,7 +187,7 @@ class MenuItems extends StatelessWidget {
       ),
       title: Text(
         title,
-        style: TextStyle(
+        style: const TextStyle(
           fontSize: 16,
           color: Colors.white,
         ),

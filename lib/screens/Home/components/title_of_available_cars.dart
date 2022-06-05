@@ -4,6 +4,8 @@ import '../../../components/constants.dart';
 import '../../AvailableCars/available_cars_screen.dart';
 
 class TitleOfAvailableCars extends StatelessWidget {
+  const TitleOfAvailableCars({Key? key}) : super(key: key);
+
   // final String title;
   // final VoidCallback press;
 
@@ -38,6 +40,7 @@ class TitleOfAvailableCars extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Column(
+            
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
@@ -46,7 +49,7 @@ class TitleOfAvailableCars extends StatelessWidget {
                   top: size.width * 0.02,
                   bottom: size.width * 0.01,
                 ),
-                child: Text(
+                child: const Text(
                   "Available Cars",
                   style: TextStyle(
                     fontFamily: 'Poppins',
@@ -56,16 +59,18 @@ class TitleOfAvailableCars extends StatelessWidget {
                   ),
                 ),
               ),
-              Container(
-                padding: EdgeInsets.only(
-                  left: size.width * 0.05,
-                ),
-                child: Text(
-                  "Long Term and short Term",
-                  style: TextStyle(
-                    fontFamily: 'Poppins',
-                    fontSize: 18,
-                    color: Colors.white,
+              SafeArea(
+                child: Container(
+                  padding: EdgeInsets.only(
+                    left: size.width * 0.05,
+                  ),
+                  child: const Text(
+                    "Long Term and short Term",
+                    style: TextStyle(
+                      fontFamily: 'Poppins',
+                      fontSize: 16,
+                      color: Colors.white,
+                    ),
                   ),
                 ),
               ),
@@ -83,12 +88,12 @@ class TitleOfAvailableCars extends StatelessWidget {
             child: Stack(
               children: [
                 Container(
-                  margin: EdgeInsets.only(
+                  margin: const EdgeInsets.only(
                     right: kDefaultPadding,
                   ),
                   height: size.height * 0.06,
                   width: size.width * 0.12,
-                  padding: EdgeInsets.all(
+                  padding: const EdgeInsets.all(
                     kDefaultPadding,
                   ),
                   decoration: BoxDecoration(
@@ -102,10 +107,10 @@ class TitleOfAvailableCars extends StatelessWidget {
                   // right: 7,
                   // top: -12,
                   child: Container(
-                    padding: EdgeInsets.all(
+                    padding: const EdgeInsets.all(
                       kDefaultPadding,
                     ),
-                    child: Icon(
+                    child: const Icon(
                       Icons.arrow_forward_ios_rounded,
                       color: kPrimaryColor,
                       size: 35,

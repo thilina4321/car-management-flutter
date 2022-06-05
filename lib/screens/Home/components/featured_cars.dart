@@ -1,36 +1,82 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
 import '../../../components/constants.dart';
 import '../../../components/vehicle_data.dart';
 import './/screens/VehicleDetails/details_screen.dart';
 
-class FeaturedCars extends StatelessWidget {
+class FeaturedCars extends StatefulWidget {
+  @override
+  State<FeaturedCars> createState() => _FeaturedCarsState();
+}
+
+class _FeaturedCarsState extends State<FeaturedCars> {
   final List<Cars> getCarsList = [
-    Cars(
-      title: "Acura",
-      price: 44000,
-      image: "assets/images/acura_0.png",
-      //pressAction: () {},
-    ),
-    Cars(
-      title: "Land Rover",
-      price: 70000,
-      image: "assets/images/land_rover_0.png",
-      //pressAction: () {},
-    ),
-    Cars(
-      title: "Nissan GTR",
-      price: 60000,
-      image: "assets/images/nissan_gtr_0.png",
-      //pressAction: () {},
-    ),
+    // Cars(
+    //   title: "Acura",
+    //   price: 44000,
+    //   image: "assets/images/acura_0.png",
+    //   //pressAction: () {},
+    // ),
+    // Cars(
+    //   title: "Land Rover",
+    //   price: 70000,
+    //   image: "assets/images/land_rover_0.png",
+    //   //pressAction: () {},
+    // ),
+    // Cars(
+    //   title: "Nissan GTR",
+    //   price: 60000,
+    //   image: "assets/images/nissan_gtr_0.png",
+    //   //pressAction: () {},
+    // ),
   ];
+
+  var featuredCarsArr = [];
+
+  final url = 'https://car-management-app-university.herokuapp.com';
+
+  Dio dio = new Dio();
+  Future<void> fetchFeatured() async {
+    try {
+      var recCars = await dio.get('$url/cars/available');
+
+      List cars = recCars.data["cars"];
+      setState(() {
+        cars.forEach((element) {
+          List fav = element['fav'];
+          
+          getCarsList.add(Cars(
+              id: element['id'],
+              title: element["vehicleName"],
+              description: element["description"],
+              price: element["price"],
+              year: element["year"],
+              transmission: element['transmission'],
+              fuelType: element['fuelType'],
+              seats: element['seats'],
+              ac: element['ac'],
+              fav: fav,
+              image: "assets/images/ferrari_spider_488_0.png"));
+        });
+      });
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  @override
+  void initState() {
+    fetchFeatured();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Row(
-        children: getCarsList.map((tx) {
+        children: featuredCarsArr.map((tx) {
           return Row(
             children: <Widget>[
               FeaturedCarCard(
@@ -39,7 +85,18 @@ class FeaturedCars extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => DetailsScreen(),
+                      builder: (context) => DetailsScreen(
+                        title: tx.title,
+                        id: tx.id,
+                        price: tx.price,
+                        year: tx.year,
+                        description: tx.description,
+                        transmission: "",
+                        seats: "",
+                        fuelType: "",
+                        ac: "",
+                        fav: tx.fav,
+                      ),
                     ),
                   );
                 },

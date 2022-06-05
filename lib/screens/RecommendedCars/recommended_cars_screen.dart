@@ -1,42 +1,44 @@
+import 'package:dio/dio.dart';
+import 'package:ds_rent_cars/util/user.dart';
 import 'package:flutter/material.dart';
 
 import './/components/constants.dart';
 import './/components/vehicle_data.dart';
 import './/screens/components/vehicle_card_rectangle_box.dart';
 
-class RecommendedCarsScreen extends StatelessWidget {
-  final List<Cars> getCarsList = [
-    Cars(
-      title: "Acura",
-      price: 44000,
-      image: "assets/images/acura_0.png",
-      //pressAction: () {},
-    ),
-    Cars(
-      title: "Camaro",
-      price: 80000,
-      image: "assets/images/camaro_0.png",
-      //pressAction: () {},
-    ),
-    Cars(
-      title: "Land Rover",
-      price: 70000,
-      image: "assets/images/land_rover_0.png",
-      //pressAction: () {},
-    ),
-    Cars(
-      title: "Ferrari 488",
-      price: 200000,
-      image: "assets/images/ferrari_spider_488_0.png",
-      //pressAction: () {},
-    ),
-    Cars(
-      title: "Nissan GTR",
-      price: 60000,
-      image: "assets/images/nissan_gtr_0.png",
-      //pressAction: () {},
-    ),
-  ];
+class RecommendedCarsScreen extends StatefulWidget {
+  @override
+  State<RecommendedCarsScreen> createState() => _RecommendedCarsScreenState();
+}
+
+class _RecommendedCarsScreenState extends State<RecommendedCarsScreen> {
+  var recommandedCars = [];
+  final List<Cars> getCarsList = [];
+
+  final url = 'https://car-management-app-university.herokuapp.com';
+
+  Dio dio = new Dio();
+  String userId = '';
+
+  Future<void> fetchFeatured() async {
+    try {
+      var recCars = await dio.get('$url/cars/recommanded');
+
+      List cars = recCars.data["cars"];
+      setState(() {
+        recommandedCars = cars;
+      });
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  @override
+  void initState() {
+    fetchFeatured();
+    userId = UserDataForShare().getUserId;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -112,14 +114,25 @@ class RecommendedCarsScreen extends StatelessWidget {
         ),
       ),
       body: ListView(
-        children: [
-          VehicleCard(),
-          VehicleCard(),
-          VehicleCard(),
-          VehicleCard(),
-          VehicleCard(),
-        ],
-      ),
+          children: recommandedCars
+              .map((car) => VehicleCard(
+                    id: car['id'],
+                    title: car["vehicleName"],
+                    year: car["year"],
+                    price: car["price"],
+                    description: car["description"],
+                    transmission: car['transmission'],
+                    seats: car['seats'],
+                    ac: car['ac'],
+                    fuelType: car['fuelType'],
+                    fav: car['fav'],
+                  ))
+              .toList()
+          // [
+          //   VehicleCard(title: "", year: "",price: "",),
+
+          // ],
+          ),
     );
   }
 }

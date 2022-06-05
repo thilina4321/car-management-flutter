@@ -1,3 +1,5 @@
+import 'package:ds_rent_cars/landingPage/landing_screen.dart';
+import 'package:ds_rent_cars/landingPage/login_screen.dart';
 import 'package:flutter/material.dart';
 
 import './/components/constants.dart';
@@ -75,7 +77,14 @@ class ProfileInfoBars extends StatelessWidget {
                 size: 20,
                 color: kSecondaryColor,
               ),
-              onPressed: () {},
+              onPressed: () {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => LandingScreen(),
+                  ),
+                );
+              },
             ),
             decoration: BoxDecoration(
               color: Colors.blue[50],

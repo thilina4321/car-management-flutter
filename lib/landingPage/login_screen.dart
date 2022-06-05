@@ -1,4 +1,7 @@
+import 'package:dio/dio.dart';
+import 'package:ds_rent_cars/util/user.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import './/screens/MainScreen/main_screen.dart';
 import './/components/constants.dart';
@@ -12,6 +15,45 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   bool remember = false;
+  late String email = '';
+  late String password = '';
+  String userId = '';
+
+  final url = 'https://car-management-app-university.herokuapp.com';
+  Dio dio = new Dio();
+  final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+  
+
+  Future<void> fetchRecommend(email, password) async {
+    var data = {
+      "email": email.toString(),
+      "password": password,
+    };
+    try {
+      var signIn = await dio.post('$url/users/signin', data: data);
+      var user = signIn.data["user"];
+
+      userId = user['_id'];
+      final SharedPreferences prefs = await _prefs;
+      await prefs.setString('user', userId);
+
+      setState(() {
+        UserDataForShare().setId(userId);
+
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(
+            builder: (context) => MainScreen(
+              userId: userId,
+            ),
+          ),
+          (route) => false,
+        );
+      });
+    } catch (e) {
+      throw e;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -76,6 +118,8 @@ class _LoginScreenState extends State<LoginScreen> {
               horizontal: size.width * 0.12,
             ),
             child: TxtForm(
+              setValue: (val) => {email = val},
+              value: email,
               labelTxt: "Email",
               hintTxt: "example@gmail.com",
               suffixIcon: Icon(
@@ -90,6 +134,8 @@ class _LoginScreenState extends State<LoginScreen> {
               horizontal: size.width * 0.12,
             ),
             child: TxtForm(
+              setValue: (val) => {password = val},
+              value: password,
               labelTxt: "Password",
               hintTxt: "Enter your password",
               suffixIcon: Icon(
@@ -150,13 +196,7 @@ class _LoginScreenState extends State<LoginScreen> {
               style: TextStyle(fontSize: 20),
             ),
             onPressed: () {
-              Navigator.pushAndRemoveUntil(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => MainScreen(),
-                ),
-                (route) => false,
-              );
+              fetchRecommend(email, password);
             },
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(100),
@@ -240,7 +280,7 @@ class _LoginScreenState extends State<LoginScreen> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                Text(
+                const Text(
                   "Dont have an account?",
                   style: TextStyle(
                     color: kLScrnTxtColor2,

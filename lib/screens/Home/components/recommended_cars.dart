@@ -1,37 +1,100 @@
+import 'dart:developer';
+
+import 'package:ds_rent_cars/util/user.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../components/constants.dart';
 import '../../../components/vehicle_data.dart';
 import './/screens/VehicleDetails/details_screen.dart';
+import 'package:dio/dio.dart';
 
-class RecommendedCars extends StatelessWidget {
-  final List<Cars> getCarsList = [
-    Cars(
-      title: "Camaro",
-      price: 80000,
-      image: "assets/images/camaro_0.png",
-      //pressAction: () {},
-    ),
-    Cars(
-      title: "Ferrari 488",
-      price: 200000,
-      image: "assets/images/ferrari_spider_488_0.png",
-      //pressAction: () {},
-    ),
-    Cars(
-      title: "Nissan GTR",
-      price: 60000,
-      image: "assets/images/nissan_gtr_0.png",
-      //pressAction: () {},
-    ),
-  ];
+class RecommendedCars extends StatefulWidget {
+  @override
+  State<RecommendedCars> createState() => _RecommendedCarsState();
+}
+
+class _RecommendedCarsState extends State<RecommendedCars> {
+  final List<Cars> getCarsList = [];
+  var featuredCarsArr = [];
+  final url = 'https://car-management-app-university.herokuapp.com';
+
+  Dio dio = new Dio();
+
+  String userId = '';
+
+  Future<void> getUserId() async {
+    final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+    final SharedPreferences prefs = await _prefs;
+
+    var user = prefs.getString('user');
+    setState(() {
+      if (user != null) {
+        userId = user as String;
+      }
+    });
+  }
+
+  Future<void> fetchRecommend() async {
+    try {
+      var recCars = await dio.get('$url/cars/recommanded');
+
+      List cars = recCars.data["cars"];
+      print(cars);
+      setState(() {
+        cars.forEach((element) {
+          List fav = element['fav'];
+          getCarsList.add(Cars(
+              id: element['id'],
+              description: element["description"],
+              title: element["vehicleName"],
+              price: element["price"],
+              year: element["year"],
+              fav: fav,
+              transmission: element['transmission'],
+              fuelType: element['fuelType'],
+              seats: element['seats'],
+              ac: element['ac'],
+              image: "assets/images/ferrari_spider_488_0.png"));
+        });
+      });
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  Future<void> makeCarFav(id) async {
+    var data = {"userId": userId, "carId": id};
+    try {
+      var recCars = await dio.post('$url/cars/make-fav', data: data);
+
+      setState(() {
+        var findCar = getCarsList.firstWhere((element) => element.id == id);
+        if (findCar.fav.contains(userId)) {
+          findCar.fav.remove(userId);
+        } else {
+          findCar.fav.add(userId);
+        }
+      });
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  @override
+  void initState() {
+    fetchRecommend();
+    super.initState();
+    getUserId();
+  }
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Row(
-        children: getCarsList.map((tx) {
+        children: getCarsList.map((car) {
           return Row(
             children: [
               InkWell(
@@ -39,7 +102,17 @@ class RecommendedCars extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => DetailsScreen(),
+                      builder: (context) => DetailsScreen(
+                          title: car.title,
+                          id: car.id,
+                          price: car.price,
+                          year: car.year,
+                          description: car.description.toString(),
+                          transmission: car.transmission,
+                          seats: car.seats,
+                          fuelType: car.fuelType,
+                          fav: car.fav,
+                          ac: car.ac),
                     ),
                   );
                 },
@@ -63,7 +136,7 @@ class RecommendedCars extends StatelessWidget {
                             topRight: Radius.circular(10),
                           ),
                           image: DecorationImage(
-                            image: AssetImage(tx.image.toString()),
+                            image: AssetImage(car.image.toString()),
                             //fit: BoxFit.cover,
                           ),
                         ),
@@ -96,7 +169,7 @@ class RecommendedCars extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  tx.title.toUpperCase(),
+                                  car.title.toUpperCase(),
                                   style: const TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontFamily: 'Poppins',
@@ -104,7 +177,7 @@ class RecommendedCars extends StatelessWidget {
                                 ),
                                 const SizedBox(height: 5),
                                 Text(
-                                  "Rs " + tx.price.toString(),
+                                  "Rs " + car.price.toString(),
                                   style: const TextStyle(
                                     fontFamily: 'Poppins',
                                   ),
@@ -112,10 +185,14 @@ class RecommendedCars extends StatelessWidget {
                               ],
                             ),
                             IconButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                makeCarFav(car.id);
+                              },
                               icon: Icon(
                                 Icons.favorite_rounded,
-                                color: Colors.red,
+                                color: car.fav.contains(userId)
+                                    ? Colors.red
+                                    : Colors.grey,
                                 size: 30,
                               ),
                             ),

@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
 import './/components/constants.dart';
@@ -8,12 +9,24 @@ class BookedVehiclesCard extends StatelessWidget {
   final String title;
   final String time;
   final int price;
+  final String year;
+  final String description;
+  final List fav;
+  final Function cancelOrder;
+  final String id;
+  final String carId;
 
   BookedVehiclesCard({
     required this.image,
     required this.title,
     required this.time,
     required this.price,
+    required this.description,
+    required this.year,
+    required this.fav,
+    required this.cancelOrder,
+    required this.id,
+    required this.carId,
   });
 
   @override
@@ -23,14 +36,7 @@ class BookedVehiclesCard extends StatelessWidget {
       splashColor: kPrimaryColor.withOpacity(0.2),
       highlightColor: kPrimaryColor.withOpacity(0.2),
       borderRadius: BorderRadius.circular(50),
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => DetailsScreen(),
-          ),
-        );
-      },
+      onTap: () {},
       child: Container(
         height: size.height * 0.2,
         width: size.width,
@@ -108,16 +114,18 @@ class BookedVehiclesCard extends StatelessWidget {
                       fontFamily: 'Poppins',
                       fontWeight: FontWeight.bold,
                       color: kPrimaryColor,
-                      fontSize: 32,
+                      fontSize: 12,
                     ),
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       InkWell(
-                        onTap: () {},
+                        onTap: () {
+                          cancelOrder(id, carId);
+                        },
                         child: Container(
-                          height: size.height * 0.04,
+                          height: size.height * 0.05,
                           width: size.width * 0.24,
                           margin: EdgeInsets.only(
                             right: size.width * 0.02,
@@ -134,7 +142,7 @@ class BookedVehiclesCard extends StatelessWidget {
                               fontFamily: 'Poppins',
                               fontWeight: FontWeight.bold,
                               color: Colors.white,
-                              fontSize: 10,
+                              fontSize: 8,
                             ),
                           ),
                         ),

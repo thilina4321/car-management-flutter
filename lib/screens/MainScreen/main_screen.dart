@@ -9,6 +9,9 @@ import './/screens/user/user_screen.dart';
 import './/components/constants.dart';
 
 class MainScreen extends StatefulWidget {
+  final userId;
+
+  const MainScreen({Key? key, required this.userId}) : super(key: key);
   @override
   State<MainScreen> createState() => _MainScreenState();
 }

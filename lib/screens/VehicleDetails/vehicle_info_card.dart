@@ -5,7 +5,7 @@ import '../../components/constants.dart';
 class VehicleInfoCard extends StatelessWidget {
   final String vehicleName;
   final String image;
-  final int year;
+  final String year;
   final int price;
   final String description;
   final String transmission;
@@ -93,7 +93,7 @@ class VehicleInfoCard extends StatelessWidget {
                           Text(
                             year.toString(),
                             style: TextStyle(
-                              fontSize: 30,
+                              fontSize: 20,
                               fontWeight: FontWeight.w400,
                               color: Colors.white,
                             ),
@@ -196,7 +196,7 @@ class VehicleInfoCard extends StatelessWidget {
                       Text(
                         "Rs " + price.toString(),
                         style: TextStyle(
-                          fontSize: 30,
+                          fontSize: 20,
                           fontWeight: FontWeight.bold,
                           color: kPrimaryColor,
                         ),

@@ -1,42 +1,57 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
 import '../../components/vehicle_data.dart';
 import './/components/constants.dart';
 import './/screens/components/vehicle_card_rectangle_box.dart';
 
-class AvailableCarsScreen extends StatelessWidget {
-  final List<Cars> getCarsList = [
-    Cars(
-      title: "Acura",
-      price: 44000,
-      image: "assets/images/acura_0.png",
-      //pressAction: () {},
-    ),
-    Cars(
-      title: "Camaro",
-      price: 80000,
-      image: "assets/images/camaro_0.png",
-      //pressAction: () {},
-    ),
-    Cars(
-      title: "Land Rover",
-      price: 70000,
-      image: "assets/images/land_rover_0.png",
-      //pressAction: () {},
-    ),
-    Cars(
-      title: "Ferrari 488",
-      price: 200000,
-      image: "assets/images/ferrari_spider_488_0.png",
-      //pressAction: () {},
-    ),
-    Cars(
-      title: "Nissan GTR",
-      price: 60000,
-      image: "assets/images/nissan_gtr_0.png",
-      //pressAction: () {},
-    ),
-  ];
+class AvailableCarsScreen extends StatefulWidget {
+  @override
+  State<AvailableCarsScreen> createState() => _AvailableCarsScreenState();
+}
+
+class _AvailableCarsScreenState extends State<AvailableCarsScreen> {
+  var availableCars = [];
+  final List<Cars> getCarsList = [];
+
+  final url = 'https://car-management-app-university.herokuapp.com';
+
+  Dio dio = new Dio();
+
+  Future<void> fetchAvailable() async {
+    try {
+      var availableCars = await dio.get('$url/cars/available');
+      List cars = availableCars.data['cars'];
+      setState(() {
+        cars.forEach((element) {
+          List fav = element['fav'];
+          getCarsList.add(Cars(
+            description: element['description'],
+            id: element['id'],
+            title: element['vehicleName'],
+            price: element['price'],
+            image: "assets/images/acura_0.png",
+            year: element['year'],
+            transmission: element['transmission'],
+            fuelType: element['fuelType'],
+            seats: element['seats'],
+            ac: element['ac'],
+            fav: fav,
+
+            //pressAction: () {},
+          ));
+        });
+      });
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  @override
+  void initState() {
+    fetchAvailable();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -114,13 +129,22 @@ class AvailableCarsScreen extends StatelessWidget {
         ),
       ),
       body: ListView(
-        children: [
-          VehicleCard(),
-          VehicleCard(),
-          VehicleCard(),
-          VehicleCard(),
-          VehicleCard(),
-        ],
+        children: getCarsList
+            .map(
+              (car) => VehicleCard(
+                id: car.id,
+                title: car.title,
+                year: car.year,
+                price: car.price,
+                description: car.description,
+                transmission: car.transmission,
+                seats: car.seats,
+                ac: car.ac,
+                fuelType: car.fuelType,
+                fav: car.fav,
+              ),
+            )
+            .toList(),
       ),
     );
   }

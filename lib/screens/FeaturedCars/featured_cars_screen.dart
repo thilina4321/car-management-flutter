@@ -1,42 +1,69 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
 import './/components/constants.dart';
 import './/components/vehicle_data.dart';
 import './/screens/components/vehicle_card_rectangle_box.dart';
 
-class FeaturedCarsScreen extends StatelessWidget {
+class FeaturedCarsScreen extends StatefulWidget {
+  @override
+  State<FeaturedCarsScreen> createState() => _FeaturedCarsScreenState();
+}
+
+class _FeaturedCarsScreenState extends State<FeaturedCarsScreen> {
   final List<Cars> getCarsList = [
-    Cars(
-      title: "Acura",
-      price: 44000,
-      image: "assets/images/acura_0.png",
-      //pressAction: () {},
-    ),
-    Cars(
-      title: "Camaro",
-      price: 80000,
-      image: "assets/images/camaro_0.png",
-      //pressAction: () {},
-    ),
-    Cars(
-      title: "Land Rover",
-      price: 70000,
-      image: "assets/images/land_rover_0.png",
-      //pressAction: () {},
-    ),
-    Cars(
-      title: "Ferrari 488",
-      price: 200000,
-      image: "assets/images/ferrari_spider_488_0.png",
-      //pressAction: () {},
-    ),
-    Cars(
-      title: "Nissan GTR",
-      price: 60000,
-      image: "assets/images/nissan_gtr_0.png",
-      //pressAction: () {},
-    ),
+    // Cars(
+    //   title: "Acura",
+    //   price: 44000,
+    //   image: "assets/images/acura_0.png",
+    //   //pressAction: () {},
+    // ),
+    // Cars(
+    //   title: "Camaro",
+    //   price: 80000,
+    //   image: "assets/images/camaro_0.png",
+    //   //pressAction: () {},
+    // ),
+    // Cars(
+    //   title: "Land Rover",
+    //   price: 70000,
+    //   image: "assets/images/land_rover_0.png",
+    //   //pressAction: () {},
+    // ),
+    // Cars(
+    //   title: "Ferrari 488",
+    //   price: 200000,
+    //   image: "assets/images/ferrari_spider_488_0.png",
+    //   //pressAction: () {},
+    // ),
+    // Cars(
+    //   title: "Nissan GTR",
+    //   price: 60000,
+    //   image: "assets/images/nissan_gtr_0.png",
+    //   //pressAction: () {},
+    // ),
   ];
+
+  final url = 'https://car-management-app-university.herokuapp.com';
+
+  Dio dio = new Dio();
+
+  Future<void> fetchFeatured() async {
+    try {
+
+      var fetchedDriver = await dio.get('$url/home/brand');
+      var driver = fetchedDriver.data;
+      
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  @override
+  void initState() {
+    fetchFeatured();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -115,11 +142,11 @@ class FeaturedCarsScreen extends StatelessWidget {
       ),
       body: ListView(
         children: [
-          VehicleCard(),
-          VehicleCard(),
-          VehicleCard(),
-          VehicleCard(),
-          VehicleCard(),
+          // VehicleCard(),
+          // VehicleCard(),
+          // VehicleCard(),
+          // VehicleCard(),
+          // VehicleCard(),
         ],
       ),
     );

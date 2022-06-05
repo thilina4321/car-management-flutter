@@ -1,3 +1,6 @@
+// ignore_for_file: unnecessary_const
+
+import 'package:ds_rent_cars/helper/search-helper.dart';
 import 'package:flutter/material.dart';
 
 import './/components/constants.dart';
@@ -17,7 +20,7 @@ class FavouritesScreen extends StatelessWidget {
         toolbarHeight: size.height * 0.1,
         actions: [
           Container(
-            margin: EdgeInsets.only(
+            margin: const EdgeInsets.only(
               right: kDefaultPadding / 2,
             ),
             child: Stack(
@@ -26,7 +29,7 @@ class FavouritesScreen extends StatelessWidget {
                 Container(
                   height: 35,
                   width: 35,
-                  margin: EdgeInsets.all(
+                  margin: const EdgeInsets.all(
                     kDefaultPadding / 2,
                   ),
                   decoration: BoxDecoration(
@@ -36,8 +39,13 @@ class FavouritesScreen extends StatelessWidget {
                 ),
                 Positioned(
                   child: IconButton(
-                    onPressed: () {},
-                    icon: Icon(
+                    onPressed:  () async{
+                      try {
+                        var place = await SearchHelper.userSearch(context);
+                      } catch (e) {
+                      }
+                    },
+                    icon: const Icon(
                       Icons.search_rounded,
                       color: Colors.white,
                       size: 35,
@@ -48,9 +56,9 @@ class FavouritesScreen extends StatelessWidget {
             ),
           ),
         ],
-        title: Text(
+        title: const Text(
           "My Favourites",
-          style: TextStyle(
+          style: const TextStyle(
             fontFamily: 'Poppins',
             fontWeight: FontWeight.bold,
             fontSize: 30,
@@ -59,7 +67,7 @@ class FavouritesScreen extends StatelessWidget {
         ),
         //centerTitle: true,
       ),
-      body: FavBody(),
+      body: const FavBody(),
     );
   }
 }

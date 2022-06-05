@@ -4,6 +4,29 @@ import './/components/constants.dart';
 import './/screens/VehicleDetails/details_screen.dart';
 
 class VehicleCard extends StatelessWidget {
+  final String title;
+  final String description;
+  final String year;
+  final int price;
+  final String seats;
+  final String ac;
+  final String fuelType;
+  final List fav;
+  final String transmission;
+  final String id;
+
+  VehicleCard({
+    required this.title,
+    required this.year,
+    required this.price,
+    required this.description,
+    required this.seats,
+    required this.ac,
+    required this.fuelType,
+    required this.transmission,
+    required this.fav,
+    required this.id,
+  });
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -15,7 +38,18 @@ class VehicleCard extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => DetailsScreen(),
+            builder: (context) => DetailsScreen(
+              title: title,
+              id: id,
+              price: price,
+              year: year,
+              description: description,
+              transmission: "",
+              seats: "",
+              fuelType: "",
+              ac: "",
+              fav: fav,
+            ),
           ),
         );
       },
@@ -45,7 +79,7 @@ class VehicleCard extends StatelessWidget {
             child: Container(
               width: size.width * 0.45,
               height: size.height * 0.18,
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 //color: Colors.amber,
                 image: DecorationImage(
                   alignment: Alignment.centerLeft,
@@ -70,7 +104,7 @@ class VehicleCard extends StatelessWidget {
             child: Container(
               height: size.height * 0.13,
               width: size.width * 0.6,
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(25),
                 ),
@@ -79,20 +113,20 @@ class VehicleCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "Honda Acura SUV",
+                    title.toString(),
                     style: TextStyle(
                       fontFamily: 'Poppins',
-                      fontSize: 25,
+                      fontSize: 20,
                       fontWeight: FontWeight.bold,
                       color: Colors.black,
                     ),
                   ),
                   SizedBox(height: size.width * 0.005),
                   Text(
-                    "2018",
+                    year,
                     style: TextStyle(
                       fontFamily: 'Poppins',
-                      fontSize: 20,
+                      fontSize: 12,
                       color: Colors.grey[900],
                     ),
                   ),
@@ -101,16 +135,16 @@ class VehicleCard extends StatelessWidget {
                     text: TextSpan(
                       children: [
                         TextSpan(
-                          text: "Rs 200/",
+                          text: price.toString(),
                           style: TextStyle(
                             fontFamily: 'Poppins',
-                            fontSize: 20,
+                            fontSize: 12,
                             fontWeight: FontWeight.bold,
                             color: kPrimaryColor,
                           ),
                         ),
                         TextSpan(
-                          text: "day",
+                          text: " per day",
                           style: TextStyle(
                             fontFamily: 'Poppins',
                             color: Colors.grey[900],
@@ -133,12 +167,23 @@ class VehicleCard extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => DetailsScreen(),
+                    builder: (context) => DetailsScreen(
+                      id: id,
+                      title: title,
+                      price: price,
+                      year: year,
+                      description: description,
+                      transmission: transmission,
+                      seats: seats,
+                      fuelType: fuelType,
+                      ac: ac,
+                      fav: fav,
+                    ),
                   ),
                 );
               },
               child: Container(
-                child: Text(
+                child: const Text(
                   "Book Now",
                   textAlign: TextAlign.center,
                   style: TextStyle(
@@ -150,7 +195,7 @@ class VehicleCard extends StatelessWidget {
                 ),
                 height: size.height * 0.05,
                 width: size.width * 0.45,
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   color: kPrimaryColor,
                   borderRadius: BorderRadius.only(
                     bottomLeft: Radius.circular(25),

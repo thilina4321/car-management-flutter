@@ -7,11 +7,29 @@ class VehicleCard extends StatelessWidget {
   final String title;
   final int price;
   final String image;
+  final String year;
+  final String description;
+  final String seats;
+  final String ac;
+  final String fuelType;
+  final String transmission;
+  final List fav;
+  final String id;
+  final Function makeCarFav;
 
   VehicleCard({
     required this.title,
     required this.price,
     required this.image,
+    required this.year,
+    required this.description,
+    required this.seats,
+    required this.ac,
+    required this.fuelType,
+    required this.transmission,
+    required this.makeCarFav,
+    required this.fav,
+    required this.id,
   });
 
   @override
@@ -22,7 +40,18 @@ class VehicleCard extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => DetailsScreen(),
+            builder: (context) => DetailsScreen(
+              title: title,
+              id: id,
+              price: price,
+              year: year,
+              description: description,
+              transmission: transmission,
+              seats: seats,
+              fuelType: fuelType,
+              ac: ac,
+              fav: fav,
+            ),
           ),
         );
       },
@@ -111,7 +140,9 @@ class VehicleCard extends StatelessWidget {
                   ],
                 ),
                 IconButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    makeCarFav(id);
+                  },
                   icon: Icon(
                     Icons.delete_rounded,
                     color: kSecondaryColor,
