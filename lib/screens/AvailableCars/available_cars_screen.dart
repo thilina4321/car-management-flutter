@@ -2,8 +2,10 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
 import '../../components/vehicle_data.dart';
+import '../VehicleDetails/details_screen.dart';
 import './/components/constants.dart';
 import './/screens/components/vehicle_card_rectangle_box.dart';
+import 'package:search_page/search_page.dart';
 
 class AvailableCarsScreen extends StatefulWidget {
   @override
@@ -37,8 +39,6 @@ class _AvailableCarsScreenState extends State<AvailableCarsScreen> {
             seats: element['seats'],
             ac: element['ac'],
             fav: fav,
-
-            //pressAction: () {},
           ));
         });
       });
@@ -92,7 +92,46 @@ class _AvailableCarsScreenState extends State<AvailableCarsScreen> {
                 ),
                 Positioned(
                   child: IconButton(
-                    onPressed: () {},
+                    onPressed: () => showSearch(
+                      context: context,
+                      delegate: SearchPage<Cars>(
+                        items: getCarsList,
+                        searchLabel: 'Search cars',
+                        suggestion: Center(
+                          child: Text('Filter car by name, price'),
+                        ),
+                        failure: Center(
+                          child: Text('No cars founds'),
+                        ),
+                        filter: (car) => [
+                          car.title,
+                          car.price.toString(),
+                        ],
+                        builder: (car) => ListTile(
+                          title: Text(car.title),
+                          subtitle: Text(car.price.toString()),
+                          onTap: (){
+                            Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => DetailsScreen(
+                              title: car.title,
+                              id: car.id,
+                              price: car.price,
+                              year: car.year,
+                              description: car.description,
+                              transmission: car.transmission,
+                              seats: car.seats,
+                              fuelType: car.fuelType,
+                              ac: car.ac,
+                              fav: car.fav,
+                            ),
+                          ),
+                        );
+                          },
+                        ),
+                      ),
+                    ),
                     icon: Icon(
                       Icons.search_rounded,
                       color: Colors.white,

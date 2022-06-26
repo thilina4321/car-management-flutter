@@ -40,7 +40,6 @@ class _RecommendedCarsState extends State<RecommendedCars> {
       var recCars = await dio.get('$url/cars/recommanded');
 
       List cars = recCars.data["cars"];
-      print(cars);
       setState(() {
         cars.forEach((element) {
           List fav = element['fav'];

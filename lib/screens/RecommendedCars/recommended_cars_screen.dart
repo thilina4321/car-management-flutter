@@ -1,7 +1,9 @@
 import 'package:dio/dio.dart';
 import 'package:ds_rent_cars/util/user.dart';
 import 'package:flutter/material.dart';
+import 'package:search_page/search_page.dart';
 
+import '../VehicleDetails/details_screen.dart';
 import './/components/constants.dart';
 import './/components/vehicle_data.dart';
 import './/screens/components/vehicle_card_rectangle_box.dart';
@@ -12,7 +14,7 @@ class RecommendedCarsScreen extends StatefulWidget {
 }
 
 class _RecommendedCarsScreenState extends State<RecommendedCarsScreen> {
-  var recommandedCars = [];
+  late var recommandedCars = [];
   final List<Cars> getCarsList = [];
 
   final url = 'https://car-management-app-university.herokuapp.com';
@@ -27,6 +29,22 @@ class _RecommendedCarsScreenState extends State<RecommendedCarsScreen> {
       List cars = recCars.data["cars"];
       setState(() {
         recommandedCars = cars;
+        cars.forEach((element) {
+          List fav = element['fav'];
+          getCarsList.add(Cars(
+            description: element['description'],
+            id: element['id'],
+            title: element['vehicleName'],
+            price: element['price'],
+            image: "assets/images/acura_0.png",
+            year: element['year'],
+            transmission: element['transmission'],
+            fuelType: element['fuelType'],
+            seats: element['seats'],
+            ac: element['ac'],
+            fav: fav,
+          ));
+        });
       });
     } catch (e) {
       throw e;
@@ -79,7 +97,46 @@ class _RecommendedCarsScreenState extends State<RecommendedCarsScreen> {
                 ),
                 Positioned(
                   child: IconButton(
-                    onPressed: () {},
+                    onPressed: () => showSearch(
+                      context: context,
+                      delegate: SearchPage<Cars>(
+                        items: getCarsList,
+                        searchLabel: 'Search cars',
+                        suggestion: Center(
+                          child: Text('Filter  recommandard car by name, price'),
+                        ),
+                        failure: Center(
+                          child: Text('No cars founds'),
+                        ),
+                        filter: (car) => [
+                          car.title.toString(),
+                          car.price.toString(),
+                        ],
+                        builder: (car) => ListTile(
+                          title: Text(car.title),
+                          subtitle: Text(car.price.toString()),
+                          onTap: (){
+                            Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => DetailsScreen(
+                              title: car.title,
+                              id: car.id,
+                              price: car.price,
+                              year: car.year,
+                              description: car.description,
+                              transmission: car.transmission,
+                              seats: car.seats,
+                              fuelType: car.fuelType,
+                              ac: car.ac,
+                              fav: car.fav,
+                            ),
+                          ),
+                        );
+                          },
+                        ),
+                      ),
+                    ),
                     icon: Icon(
                       Icons.search_rounded,
                       color: Colors.white,

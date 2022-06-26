@@ -41,7 +41,7 @@ class FavouritesScreen extends StatelessWidget {
                   child: IconButton(
                     onPressed:  () async{
                       try {
-                        var place = await SearchHelper.userSearch(context);
+                        // var place = await SearchHelper.userSearch(context);
                       } catch (e) {
                       }
                     },

@@ -69,7 +69,6 @@ class _BodyState extends State<Body> {
 
   @override
   Widget build(BuildContext context) {
-    print(bookedCarsArr);
     return ListView(
         children: bookedCarsArr
             .map((car) => BookedVehiclesCard(
