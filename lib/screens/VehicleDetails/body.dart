@@ -129,9 +129,10 @@ class _BottomSheetDesignState extends State<BottomSheetDesign> {
   final url = 'https://car-management-app-university.herokuapp.com';
 
   Dio dio = new Dio();
+  String value = "1";
 
   Future<void> makeOrder(days) async {
-    var data = {"userId": userId, "carId": widget.id, "days": 6};
+    var data = {"userId": userId, "carId": widget.id, "days": days};
     try {
       await dio.post('$url/cars/booked', data: data);
       setState(() {
@@ -229,9 +230,32 @@ class _BottomSheetDesignState extends State<BottomSheetDesign> {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            BottomSheetTxtField(
-              label: "Days",
-              hintTxt: "number of days",
+            TextFormField(
+              onChanged: (val) => value = val,
+              keyboardType: TextInputType.number,
+              decoration: InputDecoration(
+                floatingLabelBehavior: FloatingLabelBehavior.always,
+                label: Text(
+                  "Days",
+                  style: TextStyle(
+                    color: kLScrnTxtColor2,
+                    fontSize: 20,
+                  ),
+                ),
+                hintText: "Number of days",
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(5),
+                  borderSide: BorderSide(
+                    color: kLScrnTxtColor1,
+                  ),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(5),
+                  borderSide: BorderSide(
+                    color: kLScrnTxtColor1,
+                  ),
+                ),
+              ),
             ),
             SizedBox(height: size.width * 0.05),
             Row(
@@ -248,7 +272,7 @@ class _BottomSheetDesignState extends State<BottomSheetDesign> {
                       ),
                     ),
                     Text(
-                      "Rs 100000 / day",
+                      "${int.parse(widget.price) * int.parse(value)} /==",
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.w400,
@@ -265,7 +289,7 @@ class _BottomSheetDesignState extends State<BottomSheetDesign> {
                     style: TextStyle(fontSize: 10),
                   ),
                   onPressed: () {
-                    makeOrder("");
+                    makeOrder(value);
                   },
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(100),
@@ -285,10 +309,12 @@ class _BottomSheetDesignState extends State<BottomSheetDesign> {
 class BottomSheetTxtField extends StatefulWidget {
   final String label;
   final String hintTxt;
+  final String value;
 
   BottomSheetTxtField({
     required this.label,
     required this.hintTxt,
+    required this.value,
   });
 
   @override
@@ -325,6 +351,7 @@ class _BottomSheetTxtFieldState extends State<BottomSheetTxtField> {
         top: size.width * 0.02,
       ),
       child: TextFormField(
+        onChanged: (val) => {},
         decoration: InputDecoration(
           floatingLabelBehavior: FloatingLabelBehavior.always,
           label: Text(

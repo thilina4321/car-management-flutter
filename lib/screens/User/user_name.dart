@@ -34,7 +34,7 @@ class UserName extends StatelessWidget {
           ),
           SizedBox(height: size.height * 0.005),
           Text(
-            "@" + userName,
+            userName,
             style: TextStyle(
               fontFamily: 'Poppins',
               fontWeight: FontWeight.w300,

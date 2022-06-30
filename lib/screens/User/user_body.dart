@@ -1,11 +1,71 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import './/components/constants.dart';
 import 'info_bars.dart';
 import 'user_avatar.dart';
 import 'user_name.dart';
 
-class UserBody extends StatelessWidget {
+class UserBody extends StatefulWidget {
+  @override
+  State<UserBody> createState() => _UserBodyState();
+}
+
+class _UserBodyState extends State<UserBody> {
+  String userId = '';
+
+  Future<void> getUserId() async {
+    final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+    final SharedPreferences prefs = await _prefs;
+
+    var user = prefs.getString('user');
+    print(user);
+    if (user != null) {
+      userId = user as String;
+    }
+  }
+
+  final url = 'https://car-management-app-university.herokuapp.com';
+
+  Dio dio = new Dio();
+  String value = "1";
+  String name = "";
+  String email = "";
+// /62b75b9de2ac2548cd85c414
+  Future<void> getUser() async {
+    final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+    final SharedPreferences prefs = await _prefs;
+
+    var user = prefs.getString('user');
+    print(user);
+    if (user != null) {
+      userId = user as String;
+    }
+    print(userId);
+    print("===========");
+
+    try {
+      var userDetails = await dio
+          .get('$url/users/find-user-and-car/'+ userId);
+
+      var user = userDetails.data['user'];
+      setState(() {
+        name = user['firstName'];
+        email = user['email'];
+      });
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  @override
+  void initState() {
+    // getUserId();
+    getUser();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -25,8 +85,8 @@ class UserBody extends StatelessWidget {
                 UserAvatar(size: size, image: "assets/user avatar/avatar.png"),
                 UserName(
                   size: size,
-                  fNameAndLastName: "Kanisha Liyanage",
-                  userName: "KanishaL",
+                  fNameAndLastName: name,
+                  userName: email,
                 ),
                 InkWell(
                   onTap: () {},

@@ -4,6 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:dropdown_search/dropdown_search.dart';
+import 'package:search_page/search_page.dart';
 
 import '../../../components/constants.dart';
 import '../../../components/vehicle_data.dart';
@@ -98,71 +99,27 @@ class _HeaderWithSearchBoxState extends State<HeaderWithSearchBox> {
                   ),
                 ),
                 const Spacer(),
-                Image.asset("assets/logo/logo.png"),
-              ],
-            ),
-          ),
-          Positioned(
-            bottom: 0,
-            left: 0,
-            right: 0,
-            child: Padding(
-              padding: EdgeInsets.all(8),
-              child: DropdownSearch<MultiLevelString>(
-                key: myKey,
-                items: myItems,
-                compareFn: (i1, i2) => i1.level1 == i2.level1,
-                popupProps: PopupProps.menu(
-                  showSelectedItems: true,
-                  interceptCallBacks: true,
-                  itemBuilder: (ctx, item, isSelected) {
-                    return ListTile(
-                      selected: isSelected,
-                      title: Text(item.level1),
-                      trailing: item.subLevel.isEmpty
-                          ? null
-                          : (item.isExpanded
-                              ? IconButton(
-                                  icon: Icon(Icons.arrow_drop_down),
-                                  onPressed: () {
-                                    item.isExpanded = !item.isExpanded;
-                                    myKey.currentState?.updatePopupState();
-                                  },
-                                )
-                              : IconButton(
-                                  icon: Icon(Icons.arrow_right),
-                                  onPressed: () {
-                                    item.isExpanded = !item.isExpanded;
-                                    myKey.currentState?.updatePopupState();
-                                  },
-                                )),
-                      subtitle: item.subLevel.isNotEmpty && item.isExpanded
-                          ? Container(
-                              height: item.subLevel.length * 50,
-                              child: ListView(
-                                children: item.subLevel
-                                    .map(
-                                      (e) => ListTile(
-                                        selected: myKey.currentState
-                                                ?.getSelectedItem?.level1 ==
-                                            e.level1,
-                                        title: Text(e.level1),
-                                        onTap: () {
-                                          myKey.currentState
-                                              ?.popupValidate([e]);
-                                        },
-                                      ),
-                                    )
-                                    .toList(),
-                              ),
-                            )
-                          : null,
-                      onTap: () {
-                        myKey.currentState?.popupValidate([item]);
-
-                        var car = getCarsList.firstWhere((element) =>
-                            element.title.toString() == item.toString());
-                        Navigator.push(
+                IconButton(
+                    onPressed: () => showSearch(
+                      context: context,
+                      delegate: SearchPage<Cars>(
+                        items: getCarsList,
+                        searchLabel: 'Search cars',
+                        suggestion: Center(
+                          child: Text('Filter car by name, price'),
+                        ),
+                        failure: Center(
+                          child: Text('No cars founds'),
+                        ),
+                        filter: (car) => [
+                          car.title,
+                          car.price.toString(),
+                        ],
+                        builder: (car) => ListTile(
+                          title: Text(car.title),
+                          subtitle: Text(car.price.toString()),
+                          onTap: (){
+                            Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder: (context) => DetailsScreen(
@@ -179,50 +136,15 @@ class _HeaderWithSearchBoxState extends State<HeaderWithSearchBox> {
                             ),
                           ),
                         );
-                      },
-                    );
-                  },
-                ),
-              ),
+                          },
+                        ),
+                      ),
+                    ),
+                    color: Colors.white,
+                    iconSize: 50,
+                    icon: Icon(Icons.search_off_rounded))
+              ],
             ),
-            // Container(
-            //   alignment: Alignment.center,
-            //   margin: const EdgeInsets.symmetric(horizontal: kDefaultPadding),
-            //   padding: const EdgeInsets.symmetric(horizontal: kDefaultPadding),
-            //   height: 54,
-            //   decoration: BoxDecoration(
-            //     color: Colors.white,
-            //     borderRadius: BorderRadius.circular(20),
-            //     boxShadow: [
-            //       BoxShadow(
-            //         offset: const Offset(0, 10),
-            //         blurRadius: 50,
-            //         color: kPrimaryColor.withOpacity(0.23),
-            //       ),
-            //     ],
-            //   ),
-            //   child: Row(
-            //     children: <Widget>[
-            //       Expanded(
-            //         child: TextField(
-            //           onChanged: (value) {},
-            //           decoration: InputDecoration(
-            //             hintText: "Search",
-            //             hintStyle: TextStyle(
-            //               color: kPrimaryColor.withOpacity(0.5),
-            //             ),
-            //             enabledBorder: InputBorder.none,
-            //             focusedBorder: InputBorder.none,
-            //             // surffix isn't working properly  with SVG
-            //             // thats why we use row
-            //             // suffixIcon: SvgPicture.asset("assets/icons/search.svg"),
-            //           ),
-            //         ),
-            //       ),
-            //       SvgPicture.asset("assets/icons/search.svg"),
-            //     ],
-            //   ),
-            // ),
           ),
         ],
       ),
